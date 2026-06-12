@@ -52,7 +52,6 @@ def update_task_status(task_id, is_completed):
         conn.commit()
         return date_str, time_str
 
-# ОСЬ ЦЯ ФУНКЦІЯ, ЯКОЇ НЕ ВИСТАЧАЛО:
 def update_task_text(task_id, new_text):
     """Оновлює текст завдання за його ID при редагуванні."""
     with sqlite3.connect(DB_NAME) as conn:
