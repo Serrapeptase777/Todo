@@ -3,7 +3,6 @@ from typing import Callable
 import flet as ft
 import database as db
 
-# 1. Створюємо чисту модель даних для завдання
 @dataclass
 class TaskData:
     task_id: int
@@ -13,11 +12,9 @@ class TaskData:
     is_completed: bool
 
 
-# 2. Компонент інтерфейсу приймає екземпляр нашого dataclass
 class Task(ft.Column):
     def __init__(self, data: TaskData, task_status_change: Callable, task_delete: Callable):
         super().__init__()
-        # Зберігаємо dataclass всередині компонента
         self.data = data
         self.task_status_change = task_status_change
         self.task_delete = task_delete
@@ -93,8 +90,7 @@ class Task(ft.Column):
     def save_clicked(self, e):
         if self.edit_name.value.strip() == "":
             return
-        
-        # Оновлюємо в базі та в нашому dataclass
+
         db.update_task_text(self.data.task_id, self.edit_name.value.strip())
         self.data.task_name = self.edit_name.value.strip()
         
@@ -104,13 +100,10 @@ class Task(ft.Column):
         self.update()
 
     def status_changed(self, e):
-        # Оновлюємо значення в dataclass відповідно до чекбокса
         self.data.is_completed = self.display_task.value
         
-        # Оновлюємо базу даних і отримуємо свіжий час зміни статусу
         new_date, new_time = db.update_task_status(self.data.task_id, self.data.is_completed)
         
-        # Записуємо нові дати в наш dataclass
         self.data.date_text = new_date
         self.data.time_text = new_time
         
@@ -185,7 +178,6 @@ class TodoApp(ft.Column):
         for row in saved_tasks:
             task_id, text, date_str, time_str, is_completed = row
             
-            # Пакуємо сирі дані з БД у красивий dataclass об'єкт
             task_data = TaskData(
                 task_id=task_id,
                 task_name=text,
@@ -194,7 +186,6 @@ class TodoApp(ft.Column):
                 is_completed=bool(is_completed)
             )
             
-            # Передаємо цей об'єкт у компонент відображення
             task = Task(
                 data=task_data,
                 task_status_change=self.task_status_change,
@@ -207,7 +198,6 @@ class TodoApp(ft.Column):
         if self.new_task.value.strip():
             task_id, date_str, time_str = db.add_task(self.new_task.value.strip())
             
-            # Пакуємо дані нового завдання у dataclass
             task_data = TaskData(
                 task_id=task_id,
                 task_name=self.new_task.value.strip(),
@@ -246,7 +236,6 @@ class TodoApp(ft.Column):
         
         count = 0
         for task in self.tasks.controls:
-            # Звертаємося до внутрішнього dataclass для фільтрації
             task.visible = (
                 status == "all"
                 or (status == "active" and not task.data.is_completed)
