@@ -3,14 +3,12 @@ import database as db
 from views import TodoApp
 
 def main(page: ft.Page):
-    # Ініціалізація бази даних
     db.init_db()
 
     page.title = "Todo"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.scroll = ft.ScrollMode.ADAPTIVE
-    
-    # Початкова тема
+ 
     page.theme_mode = ft.ThemeMode.DARK
 
     def toggle_theme(e):
